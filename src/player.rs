@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{Laser, Materials, Player, PlayerReadyFire, Speed, WinSize, TIME_STEP};
+use crate::{Laser, Materials, Player, PlayerReadyFire, Speed, WinSize, SCALE, TIME_STEP};
 
 pub struct PlayerPlugin;
 
@@ -24,7 +24,7 @@ fn player_spawn(mut commands: Commands, materials: Res<Materials>, win_size: Res
             material: materials.player_materials.clone(),
             transform: Transform {
                 translation: Vec3::new(0., bottom + 75. / 4. + 5., 10.),
-                scale: Vec3::new(0.5, 0.5, 1.),
+                scale: Vec3::new(SCALE, SCALE, 1.),
                 ..Default::default()
             },
             ..Default::default()

@@ -1,7 +1,7 @@
 use bevy::{core::FixedTimestep, prelude::*};
 use rand::{thread_rng, Rng};
 
-use crate::{ActiveEnemies, Enemy, Materials, WinSize};
+use crate::{ActiveEnemies, Enemy, Materials, WinSize, MAX_ENEMIES, SCALE};
 
 pub struct EnemyPlugin;
 
@@ -21,7 +21,7 @@ fn enemy_spawn(
     win_size: Res<WinSize>,
     materials: Res<Materials>,
 ) {
-    if active_enemies.0 >= 1 {
+    if active_enemies.0 >= MAX_ENEMIES {
         return;
     };
     // compute the random position
@@ -37,7 +37,7 @@ fn enemy_spawn(
             material: materials.enemy.clone(),
             transform: Transform {
                 translation: Vec3::new(x, y, 10.0),
-                scale: Vec3::new(0.5, 0.5, 1.),
+                scale: Vec3::new(SCALE, SCALE, 1.),
                 ..Default::default()
             },
             ..Default::default()

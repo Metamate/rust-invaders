@@ -9,8 +9,10 @@ use wasm_bindgen::prelude::*;
 const PLAYER_SPRITE: &str = "player_a_01.png";
 const LASER_SPRITE: &str = "laser_a_01.png";
 const ENEMY_SPRITE: &str = "enemy_a_01.png";
+const SCALE: f32 = 0.5;
 const EXPLOSION_SHEET: &str = "explo_a_sheet.png";
 const TIME_STEP: f32 = 1. / 60.;
+const MAX_ENEMIES: u32 = 1;
 
 // Entity, Component, Resource
 
