@@ -130,10 +130,13 @@ fn enemy_spawn(
     active_enemies.0 += 1;
 }
 
-fn enemy_movement(mut query: Query<(&mut Transform, &Speed, &mut Formation), With<Enemy>>) {
+fn enemy_movement(
+    time: Res<Time>,
+    mut query: Query<(&mut Transform, &Speed, &mut Formation), With<Enemy>>,
+) {
     // for each enemy
     for (mut tf, speed, mut formation) in query.iter_mut() {
-        let max_distance = TIME_STEP * speed.0;
+        let max_distance = TIME_STEP * speed.0 * time.delta_seconds();
         let x_org = tf.translation.x;
         let y_org = tf.translation.y;
 
@@ -143,8 +146,8 @@ fn enemy_movement(mut query: Query<(&mut Transform, &Speed, &mut Formation), Wit
 
         // Compute the next angle
         let dir = if formation.start.0 > 0. { 1. } else { -1. };
-        let angle =
-            formation.angle + dir * speed.0 * TIME_STEP / (x_radius.min(y_radius) * PI / 2.);
+        let angle = formation.angle
+            + dir * speed.0 * TIME_STEP * time.delta_seconds() / (x_radius.min(y_radius) * PI / 2.);
 
         // Calculate the destination
         let x_dst = x_radius * angle.cos() + x_offset;
@@ -205,12 +208,13 @@ fn enemy_fire(
 
 fn enemy_laser_movement(
     mut commands: Commands,
+    time: Res<Time>,
     win_size: Res<WinSize>,
     mut laser_query: Query<(Entity, &Speed, &mut Transform), (With<Laser>, With<FromEnemy>)>,
 ) {
     // for each laser from enemy
     for (entity, speed, mut tf) in laser_query.iter_mut() {
-        tf.translation.y -= speed.0 * TIME_STEP;
+        tf.translation.y -= speed.0 * TIME_STEP * time.delta_seconds();
         if tf.translation.y < -win_size.h / 2. - 50. {
             commands.entity(entity).despawn();
         }

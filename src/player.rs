@@ -58,6 +58,7 @@ fn player_spawn(
 
 fn player_movement(
     keyboard_input: Res<Input<KeyCode>>,
+    time: Res<Time>,
     mut query: Query<(&Speed, &mut Transform), With<Player>>,
 ) {
     if let Ok((speed, mut transform)) = query.single_mut() {
@@ -68,7 +69,7 @@ fn player_movement(
         } else {
             0.
         };
-        transform.translation.x += dir * speed.0 * TIME_STEP;
+        transform.translation.x += dir * speed.0 * TIME_STEP * time.delta_seconds();
     }
 }
 
@@ -114,11 +115,12 @@ fn player_fire(
 fn laser_movement(
     mut commands: Commands,
     win_size: Res<WinSize>,
+    time: Res<Time>,
     mut query: Query<(Entity, &Speed, &mut Transform), (With<Laser>, With<FromPlayer>)>,
 ) {
     for (laser_entity, speed, mut laser_tf) in query.iter_mut() {
         let translation = &mut laser_tf.translation;
-        translation.y += speed.0 * TIME_STEP;
+        translation.y += speed.0 * TIME_STEP * time.delta_seconds();
         if translation.y > win_size.h {
             commands.entity(laser_entity).despawn();
         }
